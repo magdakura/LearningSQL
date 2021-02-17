@@ -1,2 +1,2 @@
-# LearningSQL
+# SQL
 Learning SQL in Python
