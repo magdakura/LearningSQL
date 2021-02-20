@@ -1,0 +1,121 @@
+<body>
+<canvas id=cnv width=1000 height=700>
+</canvas>
+<script>
+
+ctx = cnv.getContext('2d')
+function rect(x,y,w,h,fs){
+    ctx.fillStyle = fs
+    ctx.fillRect(x*20, y*20, w*20-1, h*20-1)
+}
+
+ball_x = [5]
+ball_y = [16]
+// horizontal ball velocity
+hv_ball = [1]
+// vertical ball velocity
+vv_ball = [1]
+player1_x = 4
+player1_y = 12
+
+function constraint(){
+   // when the ball touches right wall change direction to left                           
+   for(i = 0; i < ball_x.length; i++){
+        if (ball_x[i] == 48) {
+            hv_ball[i] = - 1
+        }
+    }
+   // when the ball touches upper wall change direction down
+   for(i = 0; i < ball_y.length; i++){
+      if (ball_y[i] == 2) {
+        vv_ball[i] = 1
+      }
+    }
+
+   // when the ball touches lower wall change direction up
+   for(i = 0; i < ball_y.length; i++){
+         if (ball_y[i] == 29) {
+            vv_ball[i] = -1
+         }
+    }
+
+   // if ball hits paddle bounce 
+   for(i = 0; i < ball_x.length; i++){
+        if (ball_x[i] == 4) {
+            if (ball_y[i] >= player1_y){
+                if (ball_y[i]<= player1_y +8){
+                    hv_ball[i] = 1
+                }
+            }
+        }  
+   }     
+
+   // paddle can't go past upper wall
+   if (player1_y < 2) {
+       player1_y = 2
+   }
+
+   // paddle can't go past lower wall
+   if (player1_y > 22) {
+       player1_y = 22
+   }
+
+    // if the ball hits the left wall, player dies
+    if (ball_x[0] == 1) {
+        console.log("game over")
+    }
+}
+
+function tick(){
+  update()
+  constraint()
+  draw()
+
+}
+function keydown(event){
+  key = event.key
+  if(key == 'ArrowDown'){
+    console.log("arrow down")
+    player1_y = player1_y +1
+  } else if(key == 'ArrowUp'){
+    console.log("arrow up")
+    player1_y = player1_y - 1 
+  } else if(key == 'ArrowLeft'){
+    console.log("arrow left")
+  } else if(key == 'ArrowRight'){
+    console.log("arrow right")
+  } else if (key == ' '){
+    console.log("space bar")
+    ball_x.push(5)
+    ball_y.push(16)
+    hv_ball.push(1)
+    vv_ball.push(1)
+  }
+  constraint()
+  draw()
+}
+document.addEventListener( 'keydown', keydown);
+setInterval(tick, 100)
+
+function draw(){
+    rect(1, 1, 50, 30, 'yellow')
+    for(i = 0; i < ball_x.length; i++){
+      rect(ball_x[i], ball_y[i], 1, 1, "red") 
+    }
+    rect(player1_x, player1_y, 1, 8, "blue")
+    rect(1, 1, 1, 30, "black")
+    rect(49, 1, 1, 30, "black")
+    rect(1, 1, 49, 1, "black")
+    rect(1,30,49,1, "black")
+}
+
+function update (){
+   for(i= 0; i<ball_x.length; i++){
+      ball_x[i] = ball_x[i] + hv_ball[i]
+      ball_y[i] = ball_y[i] + vv_ball[i]
+   }
+}
+
+</script>
+</body>
+
